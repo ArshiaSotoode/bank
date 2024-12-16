@@ -9,26 +9,11 @@ from os import mkdir
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter.font import nametofont
+import sys
 
 
 def main():
-    check_data_exist()
-
-
-def get_path(join_path=""):
-    # getting the path of current working directory
-    path = pathlib.Path(__file__).parent.resolve()
-    # joining the extra path
-    return path.joinpath(join_path)
-
-
-def check_data_exist():
-    if exists(get_path(r"data\data.csv")):
-        app = App()
-    else:
-        if not exists(get_path(r"data")):
-            mkdir(get_path(r"data"))
-        app = App()
+    app = App()
 
 
 class App(ttk.Window):
@@ -66,7 +51,7 @@ class App(ttk.Window):
     def load_data(self):
         try:
             self.data = pd.read_csv(
-                get_path(r"data\data.csv"),
+                r"data.csv",
             )
         except (pd.errors.EmptyDataError, FileNotFoundError):
             self.data = pd.DataFrame(
@@ -74,7 +59,7 @@ class App(ttk.Window):
             )
 
     def save_data(self):
-        self.data.to_csv(get_path(r"data\data.csv"), index=False)
+        self.data.to_csv(r"data.csv", index=False)
 
     def load_update_frames_data(self):
         self.table.load_update_data()
@@ -400,12 +385,13 @@ class GroupsTable:
 
         # determining the font size for the table
         default_font = nametofont("TkDefaultFont")
-        default_font.configure(size=14, weight="bold")
+        default_font.configure(size=18, weight="bold")
         # Create Tableview widget
         self.table = Tableview(
             master=parent,
             paginated=False,  # Enables pagination
             searchable=True,  # Adds a search bar
+            stripecolor=("#B2DF8A", None),
         )
 
         self.load_update_data()
